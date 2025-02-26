@@ -14,6 +14,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CloseIcon from "@mui/icons-material/Close";
+import Second from "../Second";
 
 const SAMPLE_RATE = 16000;
 const FRAMES_PER_BUFFER = 1024;
@@ -382,7 +383,7 @@ export default function MainPage() {
           </div>
         </Box>
       )}
-      
+      <Second dischargeData={apiResponse} />
     </Box>
   );
 }
