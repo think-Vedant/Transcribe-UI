@@ -101,8 +101,8 @@ export default function Second({ dischargeData }) {
         }}
       >
         <FormControl component="fieldset">
-          <FormLabel sx={{ color: "white", textAlign: "center" }}>
-            Notes
+          <FormLabel>
+            <Typography sx={{ color: "white", textAlign: "center" }}>Notes</Typography>
           </FormLabel>
           <RadioGroup
             row
