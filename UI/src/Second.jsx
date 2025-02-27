@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,12 +11,26 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-export default function Second({ dischargeData }) {
+
+export default function Second({ dischargeData, transcription }) {
   const [selectedOption, setSelectedOption] = useState("soap");
   const [result, setResult] = useState("");
   const [data, setData] = useState();
+  const [apiPassData, setApiPassData] = useState("");
   const discharge = dischargeData;
   console.log("dischargeData???", discharge);
+  
+  useEffect(() =>{
+    if(discharge && Object.keys(discharge).length > 0)
+        {
+          setApiPassData(discharge.transcribedText)
+        } else if (transcription && transcription.length > 0) {
+          setApiPassData(transcription)
+        }else {
+            setApiPassData("")
+        }
+  },[discharge, transcription])
+
   console.log(typeof discharge)
   //   console.log(object)
 
@@ -40,13 +54,13 @@ export default function Second({ dischargeData }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: discharge.transcribedText }),
+        body: JSON.stringify({ text: apiPassData }),
       });
 
       if (!response.ok) throw new Error("API request failed");
 
       const data = await response.json();
-      console.log("data::::", data);
+      console.log("data:", data);
       setData(data);
       setResult(data.text || "No response received");
     } catch (error) {

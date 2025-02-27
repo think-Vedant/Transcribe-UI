@@ -58,6 +58,8 @@ export default function MainPage() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [apiResponse, setApiResponse] = useState(null);
+  const [transcriptions, setTranscriptions] = useState([]);
+
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -141,11 +143,16 @@ export default function MainPage() {
       setIsUploading(false);
     }
   };
+  
+
+  const combinedData = {
+    apiResponse,
+    transcriptions,
+  };
 
   // =================================================== Audio file code ================================================
 
   const [isStreaming, setIsStreaming] = useState(false);
-  const [transcriptions, setTranscriptions] = useState([]);
 
   const audioContextRef = useRef(null);
   const mediaStreamRef = useRef(null);
@@ -236,6 +243,9 @@ export default function MainPage() {
     setBtn2Disabled(true);
   };
 
+  // =================================================== End of audio file code ================================================
+  const newTranscript = transcriptions.join('. ')
+
   return (
     <Box>
       <Box
@@ -248,71 +258,72 @@ export default function MainPage() {
         }}
       >
         {btn1Disabled && (
-        <Box
-          sx={{
-            width: "200px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Button
-            onClick={() => {
-              startStreaming();
-              handleBtn1Click();
-            }}
-            disabled={isStreaming}
+          <Box
             sx={{
-              border: "solid gray 2px",
-              transition: "0.3s",
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                transform: "scale(1.05)",
-                border: "solid green 2px",
-              },
+              width: "200px",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            <MicIcon /> Speak
-          </Button>
-          <Button
-            onClick={stopStreaming}
-            disabled={!isStreaming}
-            sx={{
-              border: "solid gray 2px",
-              transition: "0.3s",
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                transform: "scale(1.05)",
-                border: "solid red 2px",
-              },
-            }}
-          >
-            <MicOffIcon /> Stop
-          </Button>
-        </Box>)}
+            <Button
+              onClick={() => {
+                startStreaming();
+                handleBtn1Click();
+              }}
+              disabled={isStreaming}
+              sx={{
+                border: "solid gray 2px",
+                transition: "0.3s",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  transform: "scale(1.05)",
+                  border: "solid green 2px",
+                },
+              }}
+            >
+              <MicIcon /> Speak
+            </Button>
+            <Button
+              onClick={stopStreaming}
+              disabled={!isStreaming}
+              sx={{
+                border: "solid gray 2px",
+                transition: "0.3s",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  transform: "scale(1.05)",
+                  border: "solid red 2px",
+                },
+              }}
+            >
+              <MicOffIcon /> Stop
+            </Button>
+          </Box>
+        )}
 
         {btn2Disabled && (
-
-        <Button
-          onClick={() => {
-            handleDialogOpen();
-            handleBtn2Click();
-          }}
-          sx={{
-            border: "solid white 2px",
-            transition: "0.3s",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              transform: "scale(1.05)",
-            },
-          }}
-        >
-          <FileUploadIcon sx={{ fontSize: 25, color: "gray" }} />
-          <Typography
-            sx={{ paddingLeft: "8px", color: "white", textTransform: "none" }}
+          <Button
+            onClick={() => {
+              handleDialogOpen();
+              handleBtn2Click();
+            }}
+            sx={{
+              border: "solid white 2px",
+              transition: "0.3s",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                transform: "scale(1.05)",
+              },
+            }}
           >
-            Batch File
-          </Typography>
-        </Button>)}
+            <FileUploadIcon sx={{ fontSize: 25, color: "gray" }} />
+            <Typography
+              sx={{ paddingLeft: "8px", color: "white", textTransform: "none" }}
+            >
+              Batch File
+            </Typography>
+          </Button>
+        )}
       </Box>
 
       {/* File Upload Dialog */}
@@ -377,13 +388,11 @@ export default function MainPage() {
           <h3>Audio to Text</h3>
 
           <div>
-            {transcriptions.map((text, index) => (
-              <p key={index}>{text}</p>
-            ))}
+            {newTranscript}
           </div>
         </Box>
       )}
-      <Second dischargeData={apiResponse} />
+      <Second dischargeData={apiResponse} transcription={newTranscript} />
     </Box>
   );
 }
